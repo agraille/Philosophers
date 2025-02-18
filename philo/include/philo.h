@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 08:03:40 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/14 14:42:08 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/18 10:25:05 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct s_philo
     int			time_to_die;
     int			eat_count;
     int			eat_max;
+    long int	time_start;
 	t_status	status;
 }	t_philo;
 
@@ -50,10 +51,13 @@ typedef struct s_table
 }	t_table;
 
 
-int		ft_atoi(char *arg);
-bool	parsing(char **argv);
-bool	init_args(t_table *value, char **argv);
-void	init_philo(t_table *table);
-void	*start_routine(void *arg);
-bool	create_threads(pthread_t *threads, t_table *table);
+int			ft_atoi(char *arg);
+bool		parsing(char **argv);
+bool		init_args(t_table *value, char **argv);
+void		init_philo(t_table *table);
+void		*start_routine(void *arg);
+bool		create_threads(pthread_t *threads, t_table *table);
+long int	get_time(void);
+void		ft_usleep(int time_in_ms);
+void		is_eating(t_philo *philo);
 

@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 11:39:28 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/14 14:43:43 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/18 10:07:10 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,15 @@ bool	init_args(t_table *table, char **argv)
 		i++;
 	}
 	table->nbr_philo = ft_atoi(argv[1]);
+	if (table->nbr_philo > 250)
+		return (false);
 	table->time_to_die = ft_atoi(argv[2]);
 	table->time_to_eat = ft_atoi(argv[3]);
 	table->time_to_sleep = ft_atoi(argv[4]);
 	if (argv[5])
 		table->eat_max = ft_atoi(argv[5]);
 	else
-		table->eat_max = 0;
+		table->eat_max = -1;
 	return (true);
 }
 
@@ -48,6 +50,7 @@ void init_philo(t_table *table)
         table->philosophers[i].eat_count = 0;
         table->philosophers[i].eat_max = table->eat_max;
         table->philosophers[i].status = THINKING;
+        table->philosophers[i].time_start = get_time();
         i++;
     }
 }
