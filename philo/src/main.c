@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:23:04 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/14 15:03:49 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/19 13:32:20 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	wait(pthread_t *threads, t_table *table)
 		i++;
 	}
 	free(threads);
-	free(table->philosophers);
+	free(table->philo);
 }
 
 int	main(int argc, char **argv)
@@ -50,12 +50,12 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	if (init_args(&table, argv) == false)
 		return (EXIT_FAILURE);
-	table.philosophers = (t_philo *)malloc(sizeof(t_philo) * table.nbr_philo);
-	if (!table.philosophers)
+	table.philo = (t_philo *)malloc(sizeof(t_philo) * table.nbr_philo);
+	if (!table.philo)
 		return (EXIT_FAILURE);
 	threads = (pthread_t *)malloc(sizeof(pthread_t) * table.nbr_philo);
 	if (!threads)
-		return (free(table.philosophers), EXIT_FAILURE);
+		return (free(table.philo), EXIT_FAILURE);
 	init_philo(&table);
 	if (create_threads(threads, &table) == false)
 		return (-1);
