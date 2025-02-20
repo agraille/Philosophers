@@ -6,7 +6,7 @@
 #    By: agraille <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/11 08:03:20 by agraille          #+#    #+#              #
-#    Updated: 2025/02/18 10:19:20 by agraille         ###   ########.fr        #
+#    Updated: 2025/02/20 07:48:36 by agraille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 	@echo "$(GREEN)╔═══════════════════════════╗$(RESET)"
-	@echo "$(GREEN)║   Compilation Success! ✅  ║$(RESET)"
+	@echo "$(GREEN)║   Compilation Success! ✅ ║$(RESET)"
 	@echo "$(GREEN)╚═══════════════════════════╝$(RESET)"
 
 bonus: $(BONUS_NAME)
@@ -38,7 +38,7 @@ bonus: $(BONUS_NAME)
 $(BONUS_NAME): $(BONUS_OBJ)
 	$(CC) $(CFLAGS) $(BONUS_OBJ) -o $(BONUS_NAME)
 	@echo "$(GREEN)╔═════════════════════════════════╗$(RESET)"
-	@echo "$(GREEN)║   Compilation Bonus Success! ✅  ║$(RESET)"
+	@echo "$(GREEN)║   Compilation Bonus Success! ✅ ║$(RESET)"
 	@echo "$(GREEN)╚═════════════════════════════════╝$(RESET)"
 
 $(OBJ_DIR)/%.o: %.c Makefile ./include/philo.h

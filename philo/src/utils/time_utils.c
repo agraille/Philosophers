@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:57:42 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/18 10:23:53 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/20 08:44:35 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,8 @@ long int	get_time(void)
 {
 	struct timeval	cur_time;
 
-	if (gettimeofday(&cur_time, NULL) == -1)
-		printf("Gettimeofday returned -1\n");
-	return  (cur_time.tv_sec * 1000) + (cur_time.tv_usec / 1000);
+	gettimeofday(&cur_time, NULL);
+	return ((cur_time.tv_sec * 1000) + (cur_time.tv_usec / 1000));
 }
 
 void	ft_usleep(int time_in_ms)

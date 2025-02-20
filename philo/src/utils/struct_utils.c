@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 11:39:28 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/19 16:04:48 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/20 12:57:04 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ bool	init_args(t_table *table, char **argv)
 	int	i;
 
 	i = 1;
-	while(argv[i])
+	while (argv[i])
 	{
 		if (ft_atoi(argv[i]) == -1)
 			return (false);
@@ -36,33 +36,29 @@ bool	init_args(t_table *table, char **argv)
 	return (true);
 }
 
-void init_philo(t_table *table)
+void	init_philo(t_table *table)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (i < table->nbr_philo)
-    {
-        table->philo[i].id = i + 1;
-        table->philo[i].time_to_eat = table->time_to_eat;
-        table->philo[i].time_to_sleep = table->time_to_sleep;
-        table->philo[i].time_to_die = table->time_to_die;
-        table->philo[i].eat_count = 0;
-        table->philo[i].tour = 1;
-        table->philo[i].nbr_philo = table->nbr_philo;
-        table->philo[i].eat_max = table->eat_max;
-        table->philo[i].status = THINKING;
-        table->philo[i].fork = true;
-		table->philo[i].time_start = get_time();
-        i++;
-    }
 	i = 0;
 	while (i < table->nbr_philo)
-    {
+	{
+		table->philo[i].id = i + 1;
+		table->philo[i].time_to_eat = table->time_to_eat;
+		table->philo[i].time_to_sleep = table->time_to_sleep;
+		table->philo[i].eat_count = 0;
+		table->philo[i].stop = 0;
+		table->philo[i].eat_max = table->eat_max;
+		table->philo[i].time_start = get_time();
+		i++;
+	}
+	i = 0;
+	while (i < table->nbr_philo)
+	{
 		if (table->philo[i].id == table->nbr_philo)
-        	table->philo[i].left_fork = &table->philo[0].fork;
+			table->philo[i].left_fork = table->philo[0].right_fork;
 		else
-			table->philo[i].left_fork = &table->philo[i + 1].fork;
+			table->philo[i].left_fork = table->philo[i + 1].right_fork;
 		i++;
 	}
 }
@@ -76,8 +72,66 @@ bool	create_threads(pthread_t *threads, t_table *table)
 	{
 		if (pthread_create(&threads[i], NULL, start_routine, (void *)&table->philo[i]) != 0)
 		{
+			while (--i >= 0)
+				pthread_join(threads[i], NULL);
+			destroy_mutex(table);
 			free(threads);
-			free(table);
+			free(table->philo);
+			write(2, "Threads init fail", 17);
+			return (false);
+		}
+		i++;
+	}
+	return (true);
+}
+
+void	destroy_mutex(t_table *table)
+{
+	int i;
+
+	i = 0;
+	while (i < table->nbr_philo)
+	{
+		pthread_mutex_destroy(&table->philo[i].stop_lock);
+		pthread_mutex_destroy(&table->philo[i].time_lock);
+		pthread_mutex_destroy(table->philo[i].left_fork);
+		// pthread_mutex_destroy(table->philo[i].right_fork);
+		free(table->philo[i].left_fork);
+		// free(table->philo[i].right_fork);
+		i++;
+	}
+}
+
+bool	create_mutex(t_table *table)
+{
+	int	i;
+
+	i = 0;
+	while (i < table->nbr_philo)
+	{
+		table->philo[i].right_fork = malloc(sizeof(pthread_mutex_t));
+        table->philo[i].left_fork = malloc(sizeof(pthread_mutex_t));
+        if (!table->philo[i].right_fork || !table->philo[i].left_fork)
+        {
+			free(table->philo);
+			write(2, "Mutex init fail", 15);
+            return (false);
+        }
+		if (pthread_mutex_init(&table->philo[i].stop_lock, NULL) != 0 \
+		|| pthread_mutex_init(&table->philo[i].time_lock, NULL) != 0\
+		|| pthread_mutex_init(table->philo[i].right_fork, NULL) != 0\
+		|| pthread_mutex_init(table->philo[i].left_fork, NULL) != 0)
+		{
+			while (--i >= 0)
+			{
+				pthread_mutex_destroy(&table->philo[i].stop_lock);
+				pthread_mutex_destroy(&table->philo[i].time_lock);
+				pthread_mutex_destroy(table->philo[i].right_fork);
+				pthread_mutex_destroy(table->philo[i].left_fork);
+				// revoir le free
+			}
+			free(table->philo);
+			write(2, "Mutex init fail", 15);
 			return (false);
 		}
 		i++;
