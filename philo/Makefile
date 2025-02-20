@@ -6,7 +6,7 @@
 #    By: agraille <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/11 08:03:20 by agraille          #+#    #+#              #
-#    Updated: 2025/02/20 07:48:36 by agraille         ###   ########.fr        #
+#    Updated: 2025/02/20 23:54:55 by agraille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ BONUS_NAME=
 CC=cc
 CFLAGS=-Wall -Wextra -Werror -g3
 SRC = src/main.c src/philo.c src/utils/parsing.c src/utils/struct_utils.c src/utils/time_utils.c \
-src/utils/philo_action.c 
+src/philo_action.c src/utils/threads_utils.c src/utils/mutex_utils.c
 BONUS_SRC =
 OBJ_DIR = obj
 OBJ	= $(addprefix $(OBJ_DIR)/,$(SRC:%.c=%.o))

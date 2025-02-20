@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:23:04 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/20 13:34:27 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/21 00:45:58 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,37 +42,36 @@ static void	clean(pthread_t *threads, t_table *table)
 	free(table->philo);
 }
 
-// static void	start_monitor(t_table *table)
-// {
-// 	int	i;
+static void	start_monitor(t_table *table)
+{
+	int	i;
 
-// 	while (1)
-// 	{
-// 		i = 0;
-// 		while (i < table->nbr_philo)
-// 		{
-// 			pthread_mutex_lock(&table->philo[i].time_lock);
-// 			if (get_time() - table->philo[i].time_start >= table->time_to_die)
-// 			{
-// 				printf("%ld %d is die\n",  get_time(), table->philo[i].id);
-// 				pthread_mutex_unlock(&table->philo[i].time_lock);
-// 				break ;
-// 			}
-// 			pthread_mutex_unlock(&table->philo[i].time_lock);
-// 		}
-// 		if (i < table->nbr_philo)
-// 			break ;
-// 		usleep(40000);
-// 	}
-// 	i = 0;
-// 	while (i < table->nbr_philo)
-// 	{
-// 		pthread_mutex_lock(&table->philo[i].stop_lock);
-// 		table->philo[i].stop = 1;
-// 		pthread_mutex_unlock(&table->philo[i].stop_lock);
-// 		i++;
-// 	}
-// }
+	i = 0;
+	while (1)
+	{
+		if (i == table->nbr_philo)
+			i = 0;
+		pthread_mutex_lock(&table->philo[i].time_lock);
+		if (get_time() - table->philo[i].time_start >= table->time_to_die)
+		{
+			printf("%s[%ld ms] : Philo %d is die           💀\n%s", RED, get_time(), table->philo->id, RESET);
+			pthread_mutex_unlock(&table->philo[i].time_lock);
+			i = 0;
+			while (i < table->nbr_philo)
+			{
+				pthread_mutex_lock(&table->philo[i].stop_lock);
+				table->philo[i].stop = 1;
+				pthread_mutex_unlock(&table->philo[i].stop_lock);
+				i++;
+			}
+			break ;
+		}
+		pthread_mutex_unlock(&table->philo[i].time_lock);
+		++i;
+		usleep(100);
+	}
+
+}
 
 int	main(int argc, char **argv)
 {
@@ -98,7 +97,7 @@ int	main(int argc, char **argv)
 	init_philo(&table);
 	if (create_threads(threads, &table) == false)
 		exit(EXIT_FAILURE);
-	// start_monitor(&table);
+	start_monitor(&table);
 	clean(threads, &table);
 }
 // valgrind --tool=helgrind ou valgrind --tool=drd 

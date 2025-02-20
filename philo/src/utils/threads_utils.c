@@ -1,30 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   time_utils.c                                       :+:      :+:    :+:   */
+/*   threads_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/14 08:57:42 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/20 21:38:07 by agraille         ###   ########.fr       */
+/*   Created: 2025/02/20 23:55:36 by agraille          #+#    #+#             */
+/*   Updated: 2025/02/21 00:05:09 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/philo.h"
 
-long int	get_time(void)
+bool	create_threads(pthread_t *threads, t_table *table)
 {
-	struct timeval	cur_time;
+	int	i;
 
-	gettimeofday(&cur_time, NULL);
-	return ((cur_time.tv_sec * 1000) + (cur_time.tv_usec / 1000));
-}
-
-void	ft_usleep(int time_in_ms)
-{
-	long int	start_time;
-
-	start_time = get_time();
-	while ((get_time() - start_time) < time_in_ms)
-		usleep(1000);
+	i = 0;
+	while (i < table->nbr_philo)
+	{
+		if (pthread_create(&threads[i], NULL, start_routine, \
+			(void *)&table->philo[i]) != 0)
+		{
+			while (--i >= 0)
+				pthread_join(threads[i], NULL);
+			destroy_mutex(table);
+			free(threads);
+			free(table->philo);
+			write(2, "Threads init fail", 17);
+			return (false);
+		}
+		i++;
+	}
+	return (true);
 }
