@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 11:39:28 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/21 00:14:11 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/21 12:44:36 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ bool	init_args(t_table *table, char **argv)
 	table->nbr_philo = ft_atoi(argv[1]);
 	if (table->nbr_philo > 250)
 	{
-		write(2, "Max philo was 250\n",18);
+		write(2, "Max philo was 250\n", 18);
 		return (false);
 	}
 	table->time_to_die = ft_atoi(argv[2]);

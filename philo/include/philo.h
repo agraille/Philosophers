@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 08:03:40 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/21 00:31:25 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/21 12:19:38 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ typedef struct s_philo
 	int				eat_max;
 	long int		time_start;
 	int				stop;
-	pthread_mutex_t	*right_fork;
-	pthread_mutex_t	*left_fork;
+	pthread_mutex_t	right_fork;
+	pthread_mutex_t	left_fork;
 	pthread_mutex_t	stop_lock;
 	pthread_mutex_t	time_lock;
 }	t_philo;

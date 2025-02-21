@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:23:04 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/21 00:45:58 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/21 13:00:02 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,35 +42,50 @@ static void	clean(pthread_t *threads, t_table *table)
 	free(table->philo);
 }
 
+static void	monitor_while(int *all_dead, t_table *table, int *j, int *i)
+{
+	while (*i < table->nbr_philo)
+	{
+		pthread_mutex_lock(&table->philo[*i].time_lock);
+		if (get_time() - table->philo[*i].time_start >= table->time_to_die)
+		{
+			pthread_mutex_lock(&table->philo[*i].stop_lock);
+			if (table->philo[*i].stop == 0)
+			{
+				printf("%s[%ld ms] : Philo %d is dead          💀\n%s", \
+					RED, get_time(), table->philo[*i].id, RESET);
+				while (*j < table->nbr_philo)
+				{
+					table->philo[*j].stop = 1;
+					(*j)++;
+				}
+			}
+			pthread_mutex_unlock(&table->philo[*i].stop_lock);
+		}
+		pthread_mutex_unlock(&table->philo[*i].time_lock);
+		pthread_mutex_lock(&table->philo[*i].stop_lock);
+		if (table->philo[*i].stop == 0)
+			*all_dead = 0;
+		pthread_mutex_unlock(&table->philo[*i].stop_lock);
+		(*i)++;
+	}
+}
+
 static void	start_monitor(t_table *table)
 {
 	int	i;
+	int	j;
+	int	all_dead;
 
-	i = 0;
-	while (1)
+	all_dead = 0;
+	while (all_dead == 0)
 	{
-		if (i == table->nbr_philo)
-			i = 0;
-		pthread_mutex_lock(&table->philo[i].time_lock);
-		if (get_time() - table->philo[i].time_start >= table->time_to_die)
-		{
-			printf("%s[%ld ms] : Philo %d is die           💀\n%s", RED, get_time(), table->philo->id, RESET);
-			pthread_mutex_unlock(&table->philo[i].time_lock);
-			i = 0;
-			while (i < table->nbr_philo)
-			{
-				pthread_mutex_lock(&table->philo[i].stop_lock);
-				table->philo[i].stop = 1;
-				pthread_mutex_unlock(&table->philo[i].stop_lock);
-				i++;
-			}
-			break ;
-		}
-		pthread_mutex_unlock(&table->philo[i].time_lock);
-		++i;
-		usleep(100);
+		i = 0;
+		j = 0;
+		all_dead = 1;
+		monitor_while(&all_dead, table, &j, & i);
+		ft_usleep(1);
 	}
-
 }
 
 int	main(int argc, char **argv)
