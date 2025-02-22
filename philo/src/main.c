@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:23:04 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/21 13:00:02 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/22 21:42:54 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,17 +101,17 @@ int	main(int argc, char **argv)
 	if (!table.philo)
 		return (EXIT_FAILURE);
 	if (create_mutex(&table) == false)
-		exit(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	threads = (pthread_t *)malloc(sizeof(pthread_t) * table.nbr_philo);
 	if (!threads)
 	{
 		destroy_mutex(&table);
 		free(table.philo);
-		exit(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	}
 	init_philo(&table);
 	if (create_threads(threads, &table) == false)
-		exit(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	start_monitor(&table);
 	clean(threads, &table);
 }

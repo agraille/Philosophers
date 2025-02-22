@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:34:41 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/22 14:46:57 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/22 20:31:19 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,21 +62,21 @@
 // 	is_eating(philo);
 // }
 
-void	*start_routine(void *arg)
-{
+// void	*start_routine(void *arg)
+// {
 
-	while (1)
-	{
-		if (stop_simu(philo) == true)
-			break ;
-		give_fork(philo);
-		if (philo->eat_count == philo->eat_max)
-		{
-			pthread_mutex_lock(&philo->stop_lock);
-			philo->stop = 1;
-			pthread_mutex_unlock(&philo->stop_lock);
-			break ;
-		}
-	}
-	return (NULL);
-}
+// 	while (1)
+// 	{
+// 		if (stop_simu(philo) == true)
+// 			break ;
+// 		give_fork(philo);
+// 		if (philo->eat_count == philo->eat_max)
+// 		{
+// 			pthread_mutex_lock(&philo->stop_lock);
+// 			philo->stop = 1;
+// 			pthread_mutex_unlock(&philo->stop_lock);
+// 			break ;
+// 		}
+// 	}
+// 	return (NULL);
+// }

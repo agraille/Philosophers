@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:23:04 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/22 14:48:53 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/22 22:42:53 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,31 +27,62 @@ static bool	check_error(int argc, char **argv)
 	return (true);
 }
 
-static void	start_monitor(t_table *table)
+static void	wait(t_table *table)
 {
-	int	i;
-	int	j;
-	int	all_dead;
+	int		status;
+	pid_t	dead_pid;
+	int		i;
 
-	all_dead = 0;
-	while (all_dead == 0)
+	while (1)
 	{
-		i = 0;
-		j = 0;
-		all_dead = 1;
-		monitor_while(&all_dead, table, &j, & i);
-		ft_usleep(1);
+		dead_pid = waitpid(-1, &status, 0);
+		if (WIFSIGNALED(status)) 
+		{
+			// printf("%s[%ld ms] : Philo %d is dead          💀\n%s", \
+			// 		RED, get_time(), table->philo[i].id, RESET);
+			while (i < table->nbr_philo)
+			{
+				if (table->pid[i] != dead_pid && table->pid[i] > 0)
+					kill(table->pid[i], SIGKILL);
+				i++;
+			}
+			break ;
+		}
 	}
+}
+
+static bool	run_fork(t_table *table)
+{
+	int		i;
+
+	i = 0;
+	while (i < table->nbr_philo)
+	{
+		table->pid[i] = fork();
+		if (table->pid[i] == -1)
+		{
+			close_semaphore(table);
+			return (false);
+		}
+		if (table->pid[i] == 0)
+			start_routine(table);
+		i++;
+	}
+	return (true);
 }
 
 int	main(int argc, char **argv)
 {
 	t_table		table;
-	pthread_t	*threads;
 
 	if (check_error(argc, argv) == false)
 		return (EXIT_FAILURE);
 	if (init_args(&table, argv) == false)
 		return (EXIT_FAILURE);
+	if (init_semaphore(&table) == false)
+		return (EXIT_FAILURE);
+	if (run_fork(&table) == false)
+		return (EXIT_FAILURE);
+	wait(&table);
+	close_semaphore(&table);
 }
-// valgrind --tool=helgrind ou valgrind --tool=drd 
