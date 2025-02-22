@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   struct_utils.c                                     :+:      :+:    :+:   */
+/*   struct_utils_bonus.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 11:39:28 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/22 14:51:14 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/22 14:47:59 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/philo.h"
+#include "../../include/philo_bonus.h"
 
 bool	init_args(t_table *table, char **argv)
 {
@@ -24,9 +24,9 @@ bool	init_args(t_table *table, char **argv)
 		i++;
 	}
 	table->nbr_philo = ft_atoi(argv[1]);
-	if (table->nbr_philo > 200)
+	if (table->nbr_philo > 250)
 	{
-		write(2, "Max philo was 200\n", 18);
+		write(2, "Max philo was 250\n", 18);
 		return (false);
 	}
 	table->time_to_die = ft_atoi(argv[2]);
@@ -37,31 +37,4 @@ bool	init_args(t_table *table, char **argv)
 	else
 		table->eat_max = -1;
 	return (true);
-}
-
-void	init_philo(t_table *table)
-{
-	int	i;
-
-	i = 0;
-	while (i < table->nbr_philo)
-	{
-		table->philo[i].id = i + 1;
-		table->philo[i].time_to_eat = table->time_to_eat;
-		table->philo[i].time_to_sleep = table->time_to_sleep;
-		table->philo[i].eat_count = 0;
-		table->philo[i].stop = 0;
-		table->philo[i].eat_max = table->eat_max;
-		table->philo[i].time_start = get_time();
-		i++;
-	}
-	i = 0;
-	while (i < table->nbr_philo)
-	{
-		if (table->philo[i].id == table->nbr_philo)
-			table->philo[i].left_fork = table->philo[0].right_fork;
-		else
-			table->philo[i].left_fork = table->philo[i + 1].right_fork;
-		i++;
-	}
 }

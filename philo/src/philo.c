@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:34:41 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/21 12:48:53 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/22 14:53:29 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,6 @@ bool	stop_simu(t_philo *philo)
 	}
 	pthread_mutex_unlock(&philo->stop_lock);
 	return (false);
-}
-
-void	reset_fork(t_philo *philo)
-{
-	pthread_mutex_unlock(&philo->right_fork);
-	pthread_mutex_unlock(&philo->left_fork);
 }
 
 static bool	took_odd(t_philo *philo)
