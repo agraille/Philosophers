@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 23:55:04 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/22 14:53:39 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/24 10:04:54 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	reset_fork(t_philo *philo)
 {
 	pthread_mutex_unlock(&philo->right_fork);
-	pthread_mutex_unlock(&philo->left_fork);
+	pthread_mutex_unlock(philo->left_fork);
 }
 
 void	destroy_mutex(t_table *table)
@@ -27,7 +27,6 @@ void	destroy_mutex(t_table *table)
 	{
 		pthread_mutex_destroy(&table->philo[i].stop_lock);
 		pthread_mutex_destroy(&table->philo[i].time_lock);
-		pthread_mutex_destroy(&table->philo[i].left_fork);
 		pthread_mutex_destroy(&table->philo[i].right_fork);
 		i++;
 	}
@@ -40,7 +39,6 @@ static void	destroy_mutex_reverse(t_table *table, int i)
 		pthread_mutex_destroy(&table->philo[i].stop_lock);
 		pthread_mutex_destroy(&table->philo[i].time_lock);
 		pthread_mutex_destroy(&table->philo[i].right_fork);
-		pthread_mutex_destroy(&table->philo[i].left_fork);
 	}
 }
 
@@ -59,13 +57,7 @@ static bool	init_mutex_secu(t_table *table, int i)
 		pthread_mutex_destroy(&table->philo[i].time_lock);
 		return (false);
 	}
-	if (pthread_mutex_init(&table->philo[i].left_fork, NULL) != 0)
-	{
-		pthread_mutex_destroy(&table->philo[i].stop_lock);
-		pthread_mutex_destroy(&table->philo[i].time_lock);
-		pthread_mutex_destroy(&table->philo[i].right_fork);
-		return (false);
-	}
+	table->philo[i].print_lock = &table->print_lock;
 	return (true);
 }
 
@@ -73,6 +65,8 @@ bool	create_mutex(t_table *table)
 {
 	int	i;
 
+	if (pthread_mutex_init(&table->print_lock, NULL) != 0)
+		return (false);
 	i = 0;
 	while (i < table->nbr_philo)
 	{

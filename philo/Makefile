@@ -6,7 +6,7 @@
 #    By: agraille <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/11 08:03:20 by agraille          #+#    #+#              #
-#    Updated: 2025/02/22 14:33:33 by agraille         ###   ########.fr        #
+#    Updated: 2025/02/24 13:37:42 by agraille         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ RESET = \033[0m
 
 all: $(NAME)
 
-$(NAME):
+$(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 	@echo "$(GREEN)╔═══════════════════════════╗$(RESET)"
 	@echo "$(GREEN)║   Compilation Success! ✅ ║$(RESET)"

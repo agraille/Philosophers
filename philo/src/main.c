@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:23:04 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/22 21:42:54 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/24 10:14:29 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,10 @@ static void	monitor_while(int *all_dead, t_table *table, int *j, int *i)
 			pthread_mutex_lock(&table->philo[*i].stop_lock);
 			if (table->philo[*i].stop == 0)
 			{
-				printf("%s[%ld ms] : Philo %d is dead          💀\n%s", \
+				pthread_mutex_lock(&table->print_lock);
+				printf("%s[%ld ms] : Philo %d is dead          💀%s\n", \
 					RED, get_time(), table->philo[*i].id, RESET);
+				pthread_mutex_unlock(&table->print_lock);
 				while (*j < table->nbr_philo)
 				{
 					table->philo[*j].stop = 1;
@@ -97,12 +99,12 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	if (init_args(&table, argv) == false)
 		return (EXIT_FAILURE);
-	table.philo = (t_philo *)malloc(sizeof(t_philo) * table.nbr_philo);
+	table.philo = malloc(sizeof(t_philo) * table.nbr_philo);
 	if (!table.philo)
 		return (EXIT_FAILURE);
 	if (create_mutex(&table) == false)
 		return (EXIT_FAILURE);
-	threads = (pthread_t *)malloc(sizeof(pthread_t) * table.nbr_philo);
+	threads = malloc(sizeof(pthread_t) * table.nbr_philo);
 	if (!threads)
 	{
 		destroy_mutex(&table);
@@ -116,3 +118,4 @@ int	main(int argc, char **argv)
 	clean(threads, &table);
 }
 // valgrind --tool=helgrind ou valgrind --tool=drd 
+// gerer si 1 philo

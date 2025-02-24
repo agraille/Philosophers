@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 08:03:40 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/21 12:19:38 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/24 11:23:45 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,16 @@ typedef struct s_philo
 	int				id;
 	int				time_to_eat;
 	int				time_to_sleep;
+	int				nbr_philo;
 	int				eat_count;
 	int				eat_max;
 	long int		time_start;
 	int				stop;
 	pthread_mutex_t	right_fork;
-	pthread_mutex_t	left_fork;
+	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	stop_lock;
 	pthread_mutex_t	time_lock;
+	pthread_mutex_t	*print_lock;
 }	t_philo;
 
 typedef struct s_table
@@ -51,6 +53,7 @@ typedef struct s_table
 	unsigned short	time_to_sleep;
 	unsigned short	eat_max;
 	t_philo			*philo;
+	pthread_mutex_t	print_lock;
 }	t_table;
 
 int			ft_atoi(char *arg);
@@ -67,5 +70,6 @@ void		reset_fork(t_philo *philo);
 void		destroy_mutex(t_table *table);
 bool		create_mutex(t_table *table);
 bool		stop_simu(t_philo *philo);
+void		is_thinking(t_philo *philo);
 
 #endif

@@ -6,77 +6,53 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:34:41 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/22 20:31:19 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/24 15:57:02 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo_bonus.h"
 
-// static bool	took_odd(t_philo *philo)
-// {
-// 	pthread_mutex_lock(&philo->right_fork);
-// 	if (stop_simu(philo) == true)
-// 	{
-// 		pthread_mutex_unlock(&philo->right_fork);
-// 		return (false);
-// 	}
-// 	printf("%s[%ld ms] : Philo %d has taken a fork 🍴\n%s", \
-// 		PURPLE, get_time(), philo->id, RESET);
-// 	pthread_mutex_lock(&philo->left_fork);
-// 	if (stop_simu(philo) == true)
-// 	{
-// 		reset_fork(philo);
-// 		return (false);
-// 	}
-// 	printf("%s[%ld ms] : Philo %d has taken a fork 🍴\n%s", \
-// 		PURPLE, get_time(), philo->id, RESET);
-// 	return (true);
-// }
+void	stop_simu(t_table *table)
+{
+	sem_wait(table->print);
+	printf("%s[%ld ms] : Philo %d is died          💀\n%s", \
+					RED, get_time(), table->id, RESET);
+	sem_post(table->print);
+}
 
-// void	give_fork(t_philo *philo)
-// {
-// 	if (philo->id % 2 != 0)
-// 	{
-// 		if (took_odd(philo) == false)
-// 			return ;
-// 	}
-// 	else
-// 	{
-// 		pthread_mutex_lock(&philo->left_fork);
-// 		if (stop_simu(philo) == true)
-// 		{
-// 			pthread_mutex_unlock(&philo->left_fork);
-// 			return ;
-// 		}
-// 		printf("%s[%ld ms] : Philo %d has taken a fork 🍴\n%s", \
-// 			PURPLE, get_time(), philo->id, RESET);
-// 		pthread_mutex_lock(&philo->right_fork);
-// 		if (stop_simu(philo) == true)
-// 		{
-// 			reset_fork(philo);
-// 			return ;
-// 		}
-// 		printf("%s[%ld ms] : Philo %d has taken a fork 🍴\n%s", \
-// 			PURPLE, get_time(), philo->id, RESET);
-// 	}
-// 	is_eating(philo);
-// }
 
-// void	*start_routine(void *arg)
-// {
+void	give_fork(t_table *table)
+{
+	sem_wait(table->print);
+	printf("%s[%ld ms] : Philo %d has taken a fork 🍴\n%s", \
+			PURPLE, get_time(), table->id, RESET);
+	sem_post(table->print);
+	sem_wait(table->print);
+	printf("%s[%ld ms] : Philo %d has taken a fork 🍴\n%s", \
+			PURPLE, get_time(), table->id, RESET);
+	sem_post(table->print);
+	is_eating(table);
+}
 
-// 	while (1)
-// 	{
-// 		if (stop_simu(philo) == true)
-// 			break ;
-// 		give_fork(philo);
-// 		if (philo->eat_count == philo->eat_max)
-// 		{
-// 			pthread_mutex_lock(&philo->stop_lock);
-// 			philo->stop = 1;
-// 			pthread_mutex_unlock(&philo->stop_lock);
-// 			break ;
-// 		}
-// 	}
-// 	return (NULL);
-// }
+void	*start_routine(void *arg)
+{
+	t_table *table;
+
+	table = (t_table *)arg;
+	if (table->nbr_philo == 1)
+	{
+		printf("%s[%ld ms] : Philo %d has taken a fork 🍴\n%s", \
+			PURPLE, get_time(), table->id, RESET);
+		return (NULL);
+	}
+	if (table->id % 2 == 0)
+		ft_usleep(1);
+	while (1)
+	{
+		stop_simu(table);
+		give_fork(table);
+		if (table->eat_count == table->eat_max)
+			exit(EXIT_SUCCESS);
+	}
+	return (NULL);
+}

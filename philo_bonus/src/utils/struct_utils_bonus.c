@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 11:39:28 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/22 14:47:59 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/24 16:01:42 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ bool	init_args(t_table *table, char **argv)
 	if (argv[5])
 		table->eat_max = ft_atoi(argv[5]);
 	else
-		table->eat_max = -1;
+		table->eat_count = -1;
+	if (table->eat_max == 0)
+		return (false);
 	return (true);
 }

@@ -6,47 +6,43 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 10:14:47 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/22 20:31:15 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/24 16:01:10 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo_bonus.h"
 
-// static void	is_thinking(t_philo *philo)
-// {
-// 	ft_usleep(1);
-// 	if (stop_simu(philo) == true)
-// 		return ;
-// 	printf("%s[%ld ms] : Philo %d is thinking      💭\n%s" \
-// 		, YELLOW, get_time(), philo->id, RESET);
-// }
+static void	is_thinking(t_table *table)
+{
+	ft_usleep(1);
+	stop_simu(table);
+	sem_wait(table->print);
+	printf("%s[%ld ms] : Philo %d is thinking      💭\n%s" \
+		, YELLOW, get_time(), table->id, RESET);
+	sem_post(table->print);
+}
 
-// static void	is_sleeping(t_philo *philo)
-// {
-// 	if (stop_simu(philo) == true)
-// 		return ;
-// 	printf("%s[%ld ms] : Philo %d is sleeping      🛌\n%s" \
-// 		, BLUE, get_time(), philo->id, RESET);
-// 	ft_usleep(philo->time_to_sleep);
-// 	is_thinking(philo);
-// }
+static void	is_sleeping(t_table *table)
+{
+	stop_simu(table);
+	sem_wait(table->print);
+	printf("%s[%ld ms] : Philo %d is sleeping      🛌\n%s" \
+		, BLUE, get_time(), table->id, RESET);
+	sem_post(table->print);
+	ft_usleep(table->time_to_sleep);
+	is_thinking(table);
+}
 
-// void	is_eating(t_philo *philo)
-// {
-// 	if (stop_simu(philo) == true)
-// 	{
-// 		pthread_mutex_unlock(&philo->right_fork);
-// 		pthread_mutex_unlock(&philo->left_fork);
-// 		return ;
-// 	}
-// 	printf("%s[%ld ms] : Philo %d is eating        🍝\n%s" \
-// 		, GREEN, get_time(), philo->id, RESET);
-// 	pthread_mutex_lock(&philo->time_lock);
-// 	philo->time_start = get_time();
-// 	pthread_mutex_unlock(&philo->time_lock);
-// 	ft_usleep(philo->time_to_eat);
-// 	reset_fork(philo);
-// 	if (philo->eat_count != -1)
-// 		philo->eat_count++;
-// 	is_sleeping(philo);
-// }
+void	is_eating(t_table *table)
+{
+	stop_simu(table);
+	sem_wait(table->print);
+	printf("%s[%ld ms] : Philo %d is eating        🍝\n%s" \
+		, GREEN, get_time(), table->id, RESET);
+	sem_post(table->print);
+	table->time_start = get_time();
+	ft_usleep(table->time_to_eat);
+	if (table->eat_count != -1)
+		table->eat_count++;
+	is_sleeping(table);
+}

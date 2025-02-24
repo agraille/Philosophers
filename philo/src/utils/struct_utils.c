@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 11:39:28 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/22 14:51:14 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/24 11:30:41 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ bool	init_args(t_table *table, char **argv)
 		table->eat_max = ft_atoi(argv[5]);
 	else
 		table->eat_max = -1;
+	if (table->eat_max == 0)
+		return (false);
 	return (true);
 }
 
@@ -51,17 +53,18 @@ void	init_philo(t_table *table)
 		table->philo[i].time_to_sleep = table->time_to_sleep;
 		table->philo[i].eat_count = 0;
 		table->philo[i].stop = 0;
+		table->philo[i].nbr_philo = table->nbr_philo;
 		table->philo[i].eat_max = table->eat_max;
 		table->philo[i].time_start = get_time();
 		i++;
 	}
 	i = 0;
-	while (i < table->nbr_philo)
+	while (table->nbr_philo > 1 && i < table->nbr_philo)
 	{
 		if (table->philo[i].id == table->nbr_philo)
-			table->philo[i].left_fork = table->philo[0].right_fork;
+			table->philo[i].left_fork = &table->philo[0].right_fork;
 		else
-			table->philo[i].left_fork = table->philo[i + 1].right_fork;
+			table->philo[i].left_fork = &table->philo[i + 1].right_fork;
 		i++;
 	}
 }
