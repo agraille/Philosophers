@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:23:04 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/24 16:00:02 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/24 21:41:12 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,19 +34,20 @@ static void	wait_end(t_table *table)
 	int		i;
 
 	i = 0;
-	while (1)
+	dead_pid = waitpid(-1, &status, 0);
+	while (dead_pid > 0)
 	{
-		dead_pid = waitpid(-1, &status, 0);
-		if (WIFSIGNALED(status)) 
+		if (WIFSIGNALED(status))
 		{
 			while (i < table->nbr_philo)
 			{
-				if (table->pid[i] != dead_pid && table->pid[i] > 0)
+				if (table->pid[i] > 0)
 					kill(table->pid[i], SIGKILL);
 				i++;
 			}
 			break ;
 		}
+		dead_pid = waitpid(-1, &status, 0);
 	}
 }
 
@@ -57,10 +58,10 @@ static bool	run_fork(t_table *table)
 	i = 0;
 	while (i < table->nbr_philo)
 	{
+		table->id = i + 1;
 		table->pid[i] = fork();
 		if (table->pid[i] == -1)
 		{
-			table->id = i + 1;
 			close_semaphore_forks(table);
 			close_semaphore_print(table);
 			return (false);

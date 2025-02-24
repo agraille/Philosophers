@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:23:04 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/24 10:14:29 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/24 21:45:32 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,8 @@ static void	monitor_while(int *all_dead, t_table *table, int *j, int *i)
 				printf("%s[%ld ms] : Philo %d is dead          💀%s\n", \
 					RED, get_time(), table->philo[*i].id, RESET);
 				pthread_mutex_unlock(&table->print_lock);
-				while (*j < table->nbr_philo)
-				{
+				while (++(*j) < table->nbr_philo)
 					table->philo[*j].stop = 1;
-					(*j)++;
-				}
 			}
 			pthread_mutex_unlock(&table->philo[*i].stop_lock);
 		}
@@ -83,7 +80,7 @@ static void	start_monitor(t_table *table)
 	while (all_dead == 0)
 	{
 		i = 0;
-		j = 0;
+		j = -1;
 		all_dead = 1;
 		monitor_while(&all_dead, table, &j, & i);
 		ft_usleep(1);

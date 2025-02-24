@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 10:14:47 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/24 16:01:10 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/24 21:34:31 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ void	is_eating(t_table *table)
 	sem_post(table->print);
 	table->time_start = get_time();
 	ft_usleep(table->time_to_eat);
+	sem_post(table->forks);
+	sem_post(table->forks);
 	if (table->eat_count != -1)
 		table->eat_count++;
 	is_sleeping(table);

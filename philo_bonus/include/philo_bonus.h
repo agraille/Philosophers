@@ -6,12 +6,12 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 08:03:40 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/24 16:01:29 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/24 21:41:59 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_H
-# define PHILO_H
+#ifndef PHILO_BONUS_H
+# define PHILO_BONUS_H
 
 # include <stdio.h>
 # include <unistd.h>
@@ -23,7 +23,6 @@
 # include <fcntl.h>
 # include <signal.h>
 # include <sys/wait.h>
-
 
 # define RED     "\033[1;31m"
 # define GREEN   "\033[1;32m"
@@ -39,7 +38,7 @@ typedef struct s_table
 	unsigned short	time_to_die;
 	unsigned short	time_to_eat;
 	unsigned short	time_to_sleep;
-	unsigned short	time_start;
+	long int		time_start;
 	int				eat_count;
 	unsigned short	eat_max;
 	char			sem_name[200];
@@ -60,4 +59,5 @@ void		close_semaphore_forks(t_table *table);
 void		close_semaphore_print(t_table *table);
 void		is_eating(t_table *table);
 void		stop_simu(t_table *table);
+
 #endif
