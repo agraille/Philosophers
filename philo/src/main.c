@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:23:04 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/25 10:18:46 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/25 15:47:54 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static void	monitor_while(int *all_dead, t_table *table, int *j, int *i)
 		pthread_mutex_lock(&table->philo[*i].time_lock);
 		if (get_time() - table->philo[*i].time_start >= table->time_to_die)
 		{
-			pthread_mutex_lock(&table->philo[*i].stop_lock);
+			pthread_mutex_lock(&table->stop_lock);
 			if (table->philo[*i].stop == 0)
 			{
 				pthread_mutex_lock(&table->print_lock);
@@ -59,13 +59,13 @@ static void	monitor_while(int *all_dead, t_table *table, int *j, int *i)
 				while (++(*j) < table->nbr_philo)
 					table->philo[*j].stop = 1;
 			}
-			pthread_mutex_unlock(&table->philo[*i].stop_lock);
+			pthread_mutex_unlock(&table->stop_lock);
 		}
 		pthread_mutex_unlock(&table->philo[*i].time_lock);
-		pthread_mutex_lock(&table->philo[*i].stop_lock);
+		pthread_mutex_lock(&table->stop_lock);
 		if (table->philo[*i].stop == 0)
 			*all_dead = 0;
-		pthread_mutex_unlock(&table->philo[*i].stop_lock);
+		pthread_mutex_unlock(&table->stop_lock);
 		(*i)++;
 	}
 }
