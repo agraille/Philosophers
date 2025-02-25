@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:23:04 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/24 21:45:32 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/25 10:18:46 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static void	monitor_while(int *all_dead, t_table *table, int *j, int *i)
 			if (table->philo[*i].stop == 0)
 			{
 				pthread_mutex_lock(&table->print_lock);
-				printf("%s[%ld ms] : Philo %d is dead          💀%s\n", \
+				printf("%s[%ld ms] : Philo %d died            💀%s\n", \
 					RED, get_time(), table->philo[*i].id, RESET);
 				pthread_mutex_unlock(&table->print_lock);
 				while (++(*j) < table->nbr_philo)
@@ -114,5 +114,3 @@ int	main(int argc, char **argv)
 	start_monitor(&table);
 	clean(threads, &table);
 }
-// valgrind --tool=helgrind ou valgrind --tool=drd 
-// gerer si 1 philo

@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 10:14:47 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/24 21:34:31 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/25 09:26:59 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ static void	is_sleeping(t_table *table)
 		, BLUE, get_time(), table->id, RESET);
 	sem_post(table->print);
 	ft_usleep(table->time_to_sleep);
+	if (table->time_to_sleep < table->time_to_eat)
+		ft_usleep(table->time_to_eat - table->time_to_sleep);
 	is_thinking(table);
 }
 

@@ -6,7 +6,7 @@
 /*   By: agraille <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:23:04 by agraille          #+#    #+#             */
-/*   Updated: 2025/02/24 21:41:12 by agraille         ###   ########.fr       */
+/*   Updated: 2025/02/25 09:48:16 by agraille         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,25 +27,40 @@ static bool	check_error(int argc, char **argv)
 	return (true);
 }
 
+static void	kill_all(t_table *table)
+{
+	int	i;
+
+	i = 0;
+	while (i < table->nbr_philo)
+	{
+		if (table->pid[i] > 0)
+			kill(table->pid[i], SIGKILL);
+		i++;
+	}
+}
+
 static void	wait_end(t_table *table)
 {
 	int		status;
 	pid_t	dead_pid;
-	int		i;
+	pid_t	exit_code;
 
-	i = 0;
 	dead_pid = waitpid(-1, &status, 0);
 	while (dead_pid > 0)
 	{
-		if (WIFSIGNALED(status))
+		if (WIFEXITED(status))
 		{
-			while (i < table->nbr_philo)
+			exit_code = WEXITSTATUS(status);
+			if (exit_code == 42)
 			{
-				if (table->pid[i] > 0)
-					kill(table->pid[i], SIGKILL);
-				i++;
+				sem_wait(table->print);
+				printf("%s[%ld ms] : Philo %d died             💀\n%s", \
+				RED, get_time(), table->id, RESET);
+				kill_all(table);
+				sem_post(table->print);
+				break ;
 			}
-			break ;
 		}
 		dead_pid = waitpid(-1, &status, 0);
 	}
