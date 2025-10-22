@@ -73,11 +73,11 @@ Exécutez le programme avec une liste d'entiers en argument :
 
 -1) philo mort :
 
--![Texte alternatif](https://github.com/agraille/Philosophers/philo_img1.png)
+![Texte alternatif](https://raw.githubusercontent.com/agraille/Philosophers/main/philo_img1.png)
 
 -2) philo routine ok :
  
- -![Texte alternatif](https://github.com/agraille/Philosophers/philo_img2.png)
+![Texte alternatif](https://raw.githubusercontent.com/agraille/Philosophers/main/philo_img2.png)
 
 ## 📏 Contraintes
 
